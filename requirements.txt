@@ -3,8 +3,8 @@ pandas
 numpy
 seaborn
 matplotlib
-pymongo
 certifi
 scikit-learn
+pymongo
 
 # -e .
