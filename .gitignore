@@ -2,3 +2,4 @@ venv
 .env
 Network_Security.egg-info
 logs
+Artifacts
