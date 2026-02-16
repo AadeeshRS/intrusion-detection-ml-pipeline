@@ -6,6 +6,9 @@ from src.logging.logger import logging
 from src.entity.config_entity import DataIngestionConfig,TrainingPipelineConfig,DataTransformationConfig
 import sys
 from src.components.data_transformation import DataTransformation
+from src.entity.config_entity import ModelTrainerConfig
+from src.components.model_trainer import ModelTrainer
+
 
 if __name__ == "__main__":
     try:
@@ -32,6 +35,11 @@ if __name__ == "__main__":
         data_transformation_artifact=data_transformation.initiate_data_transformation()
         logging.info("Data Transformation completed")
         print(data_transformation_artifact)
+        
+        logging.info("Model Training Started")
+        model_trainer_config=ModelTrainerConfig(trainingpipelineconfig)
+        model_trainer=ModelTrainer(model_trainer_config=model_trainer_config,data_transformation_artifact=data_transformation_artifact)
+        model_trainer_artifact=model_trainer.initiate_model_trainer()
 
     except Exception as e:
         raise NetworkSecurityException(e, sys)
