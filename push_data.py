@@ -5,8 +5,8 @@ import certifi
 import pandas as pd
 import numpy as np
 import pymongo
-from networksecurity.logging.logger import logging
-from networksecurity.exception.exception import NetworkSecurityException
+from src.logging.logger import logging
+from src.exception.exception import NetworkSecurityException
 
 from dotenv import load_dotenv
 load_dotenv()

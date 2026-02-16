@@ -1,8 +1,8 @@
-from networksecurity.components.data_ingestion import DataIngestion
-from networksecurity.exception.exception import NetworkSecurityException
-from networksecurity.logging.logger import logging
-from networksecurity.entity.config_entity import DataIngestionConfig
-from networksecurity.entity.config_entity import TrainingPipelineConfig
+from src.components.data_ingestion import DataIngestion
+from src.exception.exception import NetworkSecurityException
+from src.logging.logger import logging
+from src.entity.config_entity import DataIngestionConfig
+from src.entity.config_entity import TrainingPipelineConfig
 import sys
 
 if __name__=="__main__":

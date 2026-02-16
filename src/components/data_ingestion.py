@@ -2,12 +2,12 @@ import os, sys
 import pymongo
 import numpy as np
 import pandas as pd
-from networksecurity.exception.exception import NetworkSecurityException
-from networksecurity.logging.logger import logging
-from networksecurity.entity.config_entity import DataIngestionConfig
+from src.exception.exception import NetworkSecurityException
+from src.logging.logger import logging
+from src.entity.config_entity import DataIngestionConfig
 from typing import List
 from sklearn.model_selection import train_test_split
-from networksecurity.entity.artifact_entity import DataIngestionArtifact
+from src.entity.artifact_entity import DataIngestionArtifact
 
 from dotenv import load_dotenv
 
