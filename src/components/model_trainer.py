@@ -1,6 +1,7 @@
 import os
 import sys
 import mlflow
+import dagshub
 from src.exception.exception import NetworkSecurityException
 from src.logging.logger import logging
 from src.entity.config_entity import ModelTrainerConfig
@@ -15,6 +16,9 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from src.utils.main_utils.utils import evaluate_models
+
+
+dagshub.init(repo_owner='AadeeshRS', repo_name='intrusion-detection-ml-pipeline', mlflow=True)
 
 
 class ModelTrainer:
@@ -128,6 +132,7 @@ class ModelTrainer:
             save_object(
                 self.model_trainer_config.trained_model_file_path, obj=Network_Model
             )
+            save_object("final_model/model.pkl",best_model)
 
             model_trainer_artifact = ModelTrainerArtifact(
                 trained_model_file_path=self.model_trainer_config.trained_model_file_path,

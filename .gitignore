@@ -4,3 +4,4 @@ Network_Security.egg-info
 logs
 Artifacts
 mlruns
+mlflow.db
