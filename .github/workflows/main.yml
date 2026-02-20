@@ -7,7 +7,7 @@ on:
         paths-ignore:
             - "README.md"
 
-            
+
 jobs:
     integration:
         name: Continous Integration
@@ -94,4 +94,8 @@ jobs:
                   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
                   IMAGE_TAG: latest
               run: |
-                  docker run -d -p 8000:8000 --name networksecurity $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+                  docker run -d -p 8000:8000 --name networksecurity \
+                    -e DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }} \
+                    -e DAGSHUB_USER=AadeeshRS \
+                    -e MONGO_DB_URL=${{ secrets.MONGO_DB_URL }} \
+                    $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
