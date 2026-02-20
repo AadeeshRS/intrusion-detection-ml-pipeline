@@ -48,10 +48,49 @@ jobs:
             - name: Build, tag, and push image to Amazon ECR
               id: build-image
               env:
-                  ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                  ECR_REGISTRY: ${{ secrets.AWS_ECR_LOGIN_URI }}
                   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
                   IMAGE_TAG: latest
               run: |
                   docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
                   docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
                   echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+    Continuous-deployment:
+        name: Continous Deployment
+        needs: build-and-push-ecr-image
+        runs-on: self-hosted
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v2
+
+            - name: Pull latest image from ECR
+              env:
+                  ECR_REGISTRY: ${{ secrets.AWS_ECR_LOGIN_URI }}
+                  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
+                  IMAGE_TAG: latest
+              run: |
+                  docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+            - name: Stop and remove existing container (if any)
+              run: |
+                  docker ps -q --filter "name=networksecurity" | grep -q . && docker stop networksecurity && docker rm -fv networksecurity || true
+
+            - name: Run Docker container
+              env:
+                  ECR_REGISTRY: ${{ secrets.AWS_ECR_LOGIN_URI }}
+                  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
+                  IMAGE_TAG: latest
+              run: |
+                  docker run -d -p 8000:8000 --name networksecurity $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
