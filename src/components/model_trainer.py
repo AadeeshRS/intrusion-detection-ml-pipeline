@@ -20,7 +20,9 @@ from src.utils.main_utils.utils import evaluate_models
 
 os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("DAGSHUB_USER", "AadeeshRS")
 os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("DAGSHUB_TOKEN", "")
-dagshub.init(repo_owner='AadeeshRS', repo_name='intrusion-detection-ml-pipeline', mlflow=True)
+dagshub.init(
+    repo_owner="AadeeshRS", repo_name="intrusion-detection-ml-pipeline", mlflow=True
+)
 
 
 class ModelTrainer:
@@ -34,19 +36,17 @@ class ModelTrainer:
             self.data_transformation_artifcat = data_transformation_artifact
         except Exception as e:
             raise NetworkSecurityException(e, sys)
-        
-        
-    def track_mlflow(self,best_model,classifcationmetric):
-        with mlflow.start_run():
-            f1_score=classifcationmetric.f1_score
-            precision_score=classifcationmetric.precision_score
-            recall_score=classifcationmetric.recall_score
-            
-            mlflow.log_metric("f1_score",f1_score)
-            mlflow.log_metric("precision",precision_score)
-            mlflow.log_metric("recall",recall_score)
-            mlflow.sklearn.log_model(best_model,"model")
 
+    def track_mlflow(self, best_model, classifcationmetric):
+        with mlflow.start_run():
+            f1_score = classifcationmetric.f1_score
+            precision_score = classifcationmetric.precision_score
+            recall_score = classifcationmetric.recall_score
+
+            mlflow.log_metric("f1_score", f1_score)
+            mlflow.log_metric("precision", precision_score)
+            mlflow.log_metric("recall", recall_score)
+            mlflow.sklearn.log_model(best_model, "model")
 
     def train_model(self, X_train, y_train, X_test, y_test):
         try:
@@ -103,11 +103,11 @@ class ModelTrainer:
                 y_train, y_train_pred
             )
 
-            self.track_mlflow(best_model,classification_train_metric)
-            
+            self.track_mlflow(best_model, classification_train_metric)
+
             y_test_pred = best_model.predict(X_test)
             classification_test_metric = get_classification_score(y_test, y_test_pred)
-            self.track_mlflow(best_model,classification_test_metric)
+            self.track_mlflow(best_model, classification_test_metric)
 
             print("\nTRAINING METRICS:")
             print("-" * 40)
@@ -134,7 +134,7 @@ class ModelTrainer:
             save_object(
                 self.model_trainer_config.trained_model_file_path, obj=Network_Model
             )
-            save_object("final_model/model.pkl",best_model)
+            save_object("final_model/model.pkl", best_model)
 
             model_trainer_artifact = ModelTrainerArtifact(
                 trained_model_file_path=self.model_trainer_config.trained_model_file_path,
