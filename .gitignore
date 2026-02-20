@@ -2,6 +2,6 @@ venv
 .env
 Network_Security.egg-info
 logs
-Artifacts
 mlruns
 mlflow.db
+Artifacts
