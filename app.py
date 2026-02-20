@@ -17,7 +17,6 @@ from fastapi.templating import Jinja2Templates
 from src.utils.ml_utils.model.estimator import NetworkModel
 import pandas as pd
 
-
 templates = Jinja2Templates(directory="./templates")
 ca = certifi.where()
 from dotenv import load_dotenv
@@ -57,7 +56,9 @@ async def train_route():
         raise NetworkSecurityException(e, sys)
 
 
-@app.post("/predict",)
+@app.post(
+    "/predict",
+)
 async def predict_route(request: Request, file: UploadFile = File(...)):
     try:
         df = pd.read_csv(file.file)
