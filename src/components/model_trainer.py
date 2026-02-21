@@ -18,8 +18,10 @@ from sklearn.linear_model import LogisticRegression
 from src.utils.main_utils.utils import evaluate_models
 
 
-os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("DAGSHUB_USER", "AadeeshRS")
-os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("DAGSHUB_TOKEN", "")
+DAGSHUB_TOKEN = os.getenv("DAGSHUB_TOKEN", "")
+if DAGSHUB_TOKEN:
+    dagshub.auth.add_app_token(DAGSHUB_TOKEN)
+
 dagshub.init(
     repo_owner="AadeeshRS", repo_name="intrusion-detection-ml-pipeline", mlflow=True
 )
